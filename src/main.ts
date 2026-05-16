@@ -25,4 +25,14 @@ playBtn.addEventListener('click', async () => { /* will create AudioContext and 
     audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
     await audioCtx.resume();
   }
+
+  masterGain = audioCtx.createGain();
+  masterGain.connect(audioCtx.destination);
+  masterGain.gain.value = 0.2;
+  osc.start();
+  
+  osc = audioCtx.createOscillator();
+  osc.type = 'sine';
+  osc.connect(masterGain);
 });
+
