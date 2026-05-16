@@ -29,10 +29,26 @@ playBtn.addEventListener('click', async () => { /* will create AudioContext and 
   masterGain = audioCtx.createGain();
   masterGain.connect(audioCtx.destination);
   masterGain.gain.value = 0.2;
-  osc.start();
+  
   
   osc = audioCtx.createOscillator();
   osc.type = 'sine';
   osc.connect(masterGain);
+  osc.start();
 });
 
+stopBtn.addEventListener('click', () => { /* stop logic goes here */
+  if (osc) {
+    try { osc?.stop(); } catch {}
+    osc.disconnect();
+    osc = null;
+  }
+
+  if (masterGain) {
+    masterGain.disconnect();
+    masterGain = null;
+  }
+
+  
+
+})
