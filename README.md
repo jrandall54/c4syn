@@ -1,6 +1,6 @@
 # c4syn
 
-A beginner-friendly browser-based audio synthesizer built with TypeScript and the Web Audio API. This project is part of a learning journey into web development and synthesizer design.
+A beginner-friendly browser-based audio synthesizer built with TypeScript and the Web Audio API. This project is learning process into web development and synthesizer design.
 
 ## Current Features
 
