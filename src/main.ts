@@ -13,8 +13,22 @@ const stopBtn = document.createElement('button') as HTMLButtonElement
 stopBtn.id = 'stop';
 stopBtn.textContent = 'Stop';
 
+const gainLabel = document.createElement('label');
+gainLabel.textContent = 'Gain: ';
+
+const gainSlider = document.createElement('input') as HTMLInputElement;
+gainSlider.type = 'range';
+gainSlider.min = '0';
+gainSlider.step = '0.01';
+gainSlider.value = '0.2';
+
+
 controls.appendChild(playBtn);
+
 controls.appendChild(stopBtn);
+
+controls.appendChild(gainLabel);
+
 
 let audioCtx: AudioContext | null = null;
 let osc: OscillatorNode | null = null;
@@ -47,8 +61,6 @@ stopBtn.addEventListener('click', () => { /* stop logic goes here */
   if (masterGain) {
     masterGain.disconnect();
     masterGain = null;
-  }
-
-  
+  } 
 
 })
