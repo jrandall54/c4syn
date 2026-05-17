@@ -45,15 +45,29 @@ triangleOption.value = 'triangle';
 triangleOption.textContent = "Triangle";
 waveformSelect.appendChild(triangleOption);
 
+const filterLabel = document.createElement('label');
+filterLabel.textContent = 'Filter (Hz): ';
+
+const filterSlider = document.createElement('input') as HTMLInputElement;
+filterSlider.type = 'range';
+filterSlider.min = '200';
+filterSlider.max = '8000';
+filterSlider.step = '1';
+filterSlider.value = '1200';
+
+
 controls.appendChild(playBtn);
 controls.appendChild(stopBtn);
 controls.appendChild(gainLabel);
 controls.appendChild(gainSlider);
 controls.appendChild(waveformSelect);
+controls.appendChild(filterLabel);
+controls.appendChild(filterSlider);
 
 let audioCtx: AudioContext | null = null;
 let osc: OscillatorNode | null = null;
 let masterGain: GainNode | null = null;
+let filter: BiquadFilterNode | null = null;
 
 playBtn.addEventListener('click', async () => { /* will create AudioContext and start nodes here */ 
   if (!audioCtx) {
@@ -65,10 +79,15 @@ playBtn.addEventListener('click', async () => { /* will create AudioContext and 
   masterGain.connect(audioCtx.destination);
   masterGain.gain.value = 0.2;
   
+  const f = audioCtx.createBiquadFilter();
+  f.type = 'lowpass';
+  f.frequency.value = 1200;
+  f.connect(masterGain);
+  filter = f;
   
   osc = audioCtx.createOscillator();
   osc.type = waveformSelect.value as OscillatorType;
-  osc.connect(masterGain);
+  osc.connect(f);
   osc.start();
 });
 
@@ -95,5 +114,13 @@ gainSlider.addEventListener('input', () => {
 waveformSelect.addEventListener('change', () => {
   if (osc) {
     osc.type = waveformSelect.value as OscillatorType;
+  }
+});
+
+filterSlider.addEventListener('input', () => {
+  if (filter && audioCtx) {
+    const v = Number(filterSlider.value);
+    filter.frequency.cancelScheduledValues(audioCtx.currentTime);
+    filter.frequency.setValueAtTime(v, audioCtx.currentTime);
   }
 });
