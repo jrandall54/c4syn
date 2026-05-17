@@ -21,6 +21,7 @@ gainSlider.type = 'range';
 gainSlider.min = '0';
 gainSlider.step = '0.01';
 gainSlider.value = '0.2';
+gainSlider.max = '1';
 
 
 controls.appendChild(playBtn);
@@ -28,6 +29,8 @@ controls.appendChild(playBtn);
 controls.appendChild(stopBtn);
 
 controls.appendChild(gainLabel);
+
+controls.appendChild(gainSlider);
 
 
 let audioCtx: AudioContext | null = null;
@@ -62,5 +65,11 @@ stopBtn.addEventListener('click', () => { /* stop logic goes here */
     masterGain.disconnect();
     masterGain = null;
   } 
+});
 
-})
+gainSlider.addEventListener('input', () => {
+  if (masterGain) {
+    masterGain.gain.value = Number(gainSlider.value);
+  }
+
+});
