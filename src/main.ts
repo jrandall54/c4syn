@@ -70,38 +70,46 @@ let masterGain: GainNode | null = null;
 let filter: BiquadFilterNode | null = null;
 
 playBtn.addEventListener('click', async () => { /* will create AudioContext and start nodes here */ 
+  if (osc) {
+    return;
+  }
+  
   if (!audioCtx) {
     audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
     await audioCtx.resume();
   }
 
-  masterGain = audioCtx.createGain();
-  masterGain.connect(audioCtx.destination);
-  masterGain.gain.value = 0.2;
+  if (!masterGain) {
+    masterGain = audioCtx.createGain();
+    masterGain.connect(audioCtx.destination);
+    masterGain.gain.value = Number(gainSlider.value);
+  }
   
   const f = audioCtx.createBiquadFilter();
   f.type = 'lowpass';
-  f.frequency.value = 1200;
+  f.frequency.value = Number(filterSlider.value);;
   f.connect(masterGain);
   filter = f;
   
-  osc = audioCtx.createOscillator();
-  osc.type = waveformSelect.value as OscillatorType;
-  osc.connect(f);
-  osc.start();
+  if (!osc) {
+    osc = audioCtx.createOscillator();
+    osc.type = waveformSelect.value as OscillatorType;
+    osc.connect(filter!);
+    osc.start();
+  }
 });
 
 stopBtn.addEventListener('click', () => { /* stop logic goes here */
+  if (filter) {
+    try { filter.disconnect(); } catch {}
+    filter = null;
+  }
+  
   if (osc) {
     try { osc?.stop(); } catch {}
-    osc.disconnect();
+    try { osc.disconnect(); } catch {}
     osc = null;
   }
-
-  if (masterGain) {
-    masterGain.disconnect();
-    masterGain = null;
-  } 
 });
 
 gainSlider.addEventListener('input', () => {
