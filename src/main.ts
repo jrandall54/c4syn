@@ -1,12 +1,15 @@
 import './style.css'
+import { initSynth } from './audio/synth';
 
 const app = document.getElementById('app')! as HTMLDivElement
 app.innerHTML = '<h1>c4syn</h1><div id="controls"></div>'
 
 const controls = document.getElementById('controls')! as HTMLDivElement
 
+const synth = initSynth();
+
 const playBtn = document.createElement('button') as HTMLButtonElement
-playBtn.id = 'play'; 
+playBtn.id = 'play';
 playBtn.textContent = 'Play';
 
 const stopBtn = document.createElement('button') as HTMLButtonElement
@@ -77,8 +80,6 @@ feedbackSlider.max = '1';
 feedbackSlider.step = '0.01';
 feedbackSlider.value = '0';
 
-
-
 controls.appendChild(playBtn);
 controls.appendChild(stopBtn);
 controls.appendChild(gainLabel);
@@ -91,92 +92,35 @@ controls.appendChild(delaySlider);
 controls.appendChild(feedbackLabel);
 controls.appendChild(feedbackSlider);
 
-playBtn.addEventListener('click', async () => { /* will create AudioContext and start nodes here */ 
-  if (osc) {
-    return;
-  }
-  
-  if (!audioCtx) {
-    audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
-    await audioCtx.resume();
-  }
-
-  if (!masterGain) {
-    masterGain = audioCtx.createGain();
-    masterGain.connect(audioCtx.destination);
-    masterGain.gain.value = Number(gainSlider.value);
-  }
-  
-  if (!delay) {
-    delay = audioCtx.createDelay();
-    delay.delayTime.value = Number(delaySlider.value);
-    delay.connect(masterGain);
-  }
-
-  if (!delayFeedback) {
-    delayFeedback = audioCtx.createGain();
-    delayFeedback.gain.value = Number(feedbackSlider.value);
-    delay.connect(delayFeedback);
-    delayFeedback.connect(delay);
-  }
-  
-  const f = audioCtx.createBiquadFilter();
-  f.type = 'lowpass';
-  f.frequency.value = Number(filterSlider.value);;
-  f.connect(delay!);
-  filter = f;
-
-  
-  if (!osc) {
-    osc = audioCtx.createOscillator();
-    osc.type = waveformSelect.value as OscillatorType;
-    osc.connect(filter!);
-    osc.start();
-  }
+playBtn.addEventListener('click', async () => { /* will create AudioContext and start nodes here */
+  await synth.play();
+  synth.setGain(Number(gainSlider.value));
+  synth.setWaveform(waveformSelect.value as OscillatorType);
+  synth.setFilter(Number(filterSlider.value));
+  synth.setDelay(Number(delaySlider.value));
+  synth.setFeedback(Number(feedbackSlider));
 });
 
 stopBtn.addEventListener('click', () => { /* stop logic goes here */
-  if (filter) {
-    try { filter.disconnect(); } catch {}
-    filter = null;
-  }
-  
-  if (osc) {
-    try { osc?.stop(); } catch {}
-    try { osc.disconnect(); } catch {}
-    osc = null;
-  }
+  synth.stop();
 });
 
 gainSlider.addEventListener('input', () => {
-  if (masterGain) {
-    masterGain.gain.value = Number(gainSlider.value);
-  }
-
+  synth.setGain(Number(gainSlider.value));
 });
 
 waveformSelect.addEventListener('change', () => {
-  if (osc) {
-    osc.type = waveformSelect.value as OscillatorType;
-  }
+  synth.setWaveform(waveformSelect.value as OscillatorType);
 });
 
 filterSlider.addEventListener('input', () => {
-  if (filter && audioCtx) {
-    const v = Number(filterSlider.value);
-    filter.frequency.cancelScheduledValues(audioCtx.currentTime);
-    filter.frequency.setValueAtTime(v, audioCtx.currentTime);
-  }
+  synth.setFilter(Number(filterSlider.value));
 });
 
 delaySlider.addEventListener('input', () => {
-  if (delay) {
-    delay.delayTime.value = Number(delaySlider.value);
-  }
+  synth.setDelay(Number(delaySlider.value));
 })
 
 feedbackSlider.addEventListener('input', () => {
-  if (delayFeedback) {
-    delayFeedback.gain.value = Number(feedbackSlider.value);
-  }
+  synth.setFeedback(Number(feedbackSlider.value));
 })
