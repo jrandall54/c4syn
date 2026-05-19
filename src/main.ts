@@ -98,7 +98,7 @@ playBtn.addEventListener('click', async () => { /* will create AudioContext and 
   synth.setWaveform(waveformSelect.value as OscillatorType);
   synth.setFilter(Number(filterSlider.value));
   synth.setDelay(Number(delaySlider.value));
-  synth.setFeedback(Number(feedbackSlider));
+  synth.setFeedback(Number(feedbackSlider.value));
 });
 
 stopBtn.addEventListener('click', () => { /* stop logic goes here */
