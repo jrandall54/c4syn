@@ -1,6 +1,6 @@
 # c4syn — Session Summary
 
-Date: 2026-05-15 → 2026-05-17
+## Session: 2026-05-15 09:00 PDT → 2026-05-17 17:30 PDT
 
 ## What we completed this session
 - Replaced Vite demo with a minimal app shell and control UI.
@@ -47,3 +47,19 @@ Date: 2026-05-15 → 2026-05-17
 1. Implement delay + feedback nodes and UI wiring (src/audio/synth.ts planned).
 2. Move audio logic into src/audio/synth.ts (small refactor) and make main.ts only wire UI to the API.
 3. Add tests / verification steps and commit after each small milestone.
+ 
+## Session: 2026-05-18 14:00 PDT → 2026-05-18 15:20 PDT
+
+### What we completed this session
+- Implemented `initSynth()` in `src/audio/synth.ts` and moved audio node declarations into its scope.
+- Built a public API returned by `initSynth()`: `play()`, `stop()`, `setGain()`, `setWaveform()`, `setFilter()`, `setDelay()`, `setFeedback()`.
+- Implemented `play()` to lazily create `AudioContext`, `masterGain`, `delay`, `delayFeedback`, `filter`, and `oscillator`, and wired the audio graph.
+- Implemented `stop()` to cleanly stop and disconnect `osc` and `filter` while preserving `masterGain`, `delay`, and `delayFeedback` across plays.
+- Implemented setter methods to update parameters safely: `setGain`, `setWaveform`, `setFilter` (uses scheduling), `setDelay`, `setFeedback`.
+
+### How the added code works (overview)
+- `initSynth()` returns an object of methods (the public API). Node variables (`audioCtx`, `osc`, `masterGain`, `filter`, `delay`, `delayFeedback`) are declared inside `initSynth()` so they are private and only reachable via the API.
+- Audio graph: `osc` → `filter` → `delay` → `masterGain` → `audioCtx.destination` with a feedback loop `delay` ↔ `delayFeedback`.
+- `AudioContext` is created lazily on first `play()`; `resume()` is awaited. `masterGain`, `delay`, and `delayFeedback` persist across plays; `osc` and `filter` are created per-play and cleared on stop.
+- `setFilter` uses `cancelScheduledValues` and `setValueAtTime` to avoid clicks on changes.
+
