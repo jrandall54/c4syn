@@ -55,6 +55,29 @@ filterSlider.max = '8000';
 filterSlider.step = '1';
 filterSlider.value = '1200';
 
+const delayLabel = document.createElement('label');
+delayLabel.textContent = 'Delay (s): ';
+
+const delaySlider = document.createElement('input')! as HTMLInputElement;
+delaySlider.id = 'delay';
+delaySlider.type = 'range';
+delaySlider.min = '0';
+delaySlider.max = '1';
+delaySlider.step = '0.01';
+delaySlider.value = '0';
+
+const feedbackLabel = document.createElement('label');
+feedbackLabel.textContent = 'Feeback: ';
+
+const feedbackSlider = document.createElement('input')! as HTMLInputElement;
+feedbackSlider.id = 'feedback';
+feedbackSlider.type = 'range';
+feedbackSlider.min = '0';
+feedbackSlider.max = '1';
+feedbackSlider.step = '0.01';
+feedbackSlider.value = '0';
+
+
 
 controls.appendChild(playBtn);
 controls.appendChild(stopBtn);
@@ -63,11 +86,17 @@ controls.appendChild(gainSlider);
 controls.appendChild(waveformSelect);
 controls.appendChild(filterLabel);
 controls.appendChild(filterSlider);
+controls.appendChild(delayLabel);
+controls.appendChild(delaySlider);
+controls.appendChild(feedbackLabel);
+controls.appendChild(feedbackSlider);
 
 let audioCtx: AudioContext | null = null;
 let osc: OscillatorNode | null = null;
 let masterGain: GainNode | null = null;
 let filter: BiquadFilterNode | null = null;
+let delay: DelayNode | null = null;
+let delayFeedback: GainNode | null = null;
 
 playBtn.addEventListener('click', async () => { /* will create AudioContext and start nodes here */ 
   if (osc) {
@@ -85,11 +114,25 @@ playBtn.addEventListener('click', async () => { /* will create AudioContext and 
     masterGain.gain.value = Number(gainSlider.value);
   }
   
+  if (!delay) {
+    delay = audioCtx.createDelay();
+    delay.delayTime.value = Number(delaySlider.value);
+    delay.connect(masterGain);
+  }
+
+  if (!delayFeedback) {
+    delayFeedback = audioCtx.createGain();
+    delayFeedback.gain.value = Number(feedbackSlider.value);
+    delay.connect(delayFeedback);
+    delayFeedback.connect(delay);
+  }
+  
   const f = audioCtx.createBiquadFilter();
   f.type = 'lowpass';
   f.frequency.value = Number(filterSlider.value);;
-  f.connect(masterGain);
+  f.connect(delay!);
   filter = f;
+
   
   if (!osc) {
     osc = audioCtx.createOscillator();
@@ -132,3 +175,15 @@ filterSlider.addEventListener('input', () => {
     filter.frequency.setValueAtTime(v, audioCtx.currentTime);
   }
 });
+
+delaySlider.addEventListener('input', () => {
+  if (delay) {
+    delay.delayTime.value = Number(delaySlider.value);
+  }
+})
+
+feedbackSlider.addEventListener('input', () => {
+  if (delayFeedback) {
+    delayFeedback.gain.value = Number(feedbackSlider.value);
+  }
+})

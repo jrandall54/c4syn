@@ -36,3 +36,10 @@
 - Framework complexity (React, Vue, etc.).
 - Advanced audio features (convolver, compressor, etc.).
 - Performance optimization or build tooling customization.
+
+# End of session 
+- "End of session" occurs when user types "end of session"
+- When "End of session" occurs, create and append a summary of the last session in the file called SESSION_SUMMARY.md
+- Summary should include what steps of the implementation we completed during the last session and an overview of how everything added during the last session works
+- Include in summary references to TypeScript syntax, methods, objects and any other langauge features worthy of note from an educational perspective.
+- After creating the summary, check to make sure code is committed and pushed and confirm with user.
