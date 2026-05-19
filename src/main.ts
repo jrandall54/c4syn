@@ -91,13 +91,6 @@ controls.appendChild(delaySlider);
 controls.appendChild(feedbackLabel);
 controls.appendChild(feedbackSlider);
 
-let audioCtx: AudioContext | null = null;
-let osc: OscillatorNode | null = null;
-let masterGain: GainNode | null = null;
-let filter: BiquadFilterNode | null = null;
-let delay: DelayNode | null = null;
-let delayFeedback: GainNode | null = null;
-
 playBtn.addEventListener('click', async () => { /* will create AudioContext and start nodes here */ 
   if (osc) {
     return;
