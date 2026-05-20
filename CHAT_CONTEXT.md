@@ -4,14 +4,13 @@ Goal: beginner-friendly browser synthesizer (sine/square/sawtooth/triangle) with
 
 Current state:
 - Dev scaffold: Vite + TypeScript.
-- Implemented in src/main.ts: Play/Stop, waveform selector, master gain, lowpass filter (smooth updates).
-- Not implemented: delay effect and src/audio/synth.ts refactor.
+- Implemented in src/main.ts: Play/Stop, waveform selector, master gain, lowpass filter (smooth updates), and effect controls.
+- Implemented in src/audio/synth.ts: lazy AudioContext setup, oscillator lifecycle, gain, filter, delay, and feedback wiring.
 
 Next steps (short):
-- Add src/audio/synth.ts skeleton (lazy AudioContext, start/stop, setWaveform).
-- Implement delay + feedback UI and wiring.
-- Refactor audio logic into the audio module and commit milestone.
+- Refresh the UI copy and styling to match the current feature set.
+- Add lightweight verification for the synth API and UI wiring.
+- Keep the handoff notes in sync as the project grows.
 
 Notes / constraints:
-- Developer prefers to write files themselves; assistant should provide one-line changes and explanations and wait for explicit "OK edit" before applying edits.
 - Session plan saved at /memories/session/plan.md

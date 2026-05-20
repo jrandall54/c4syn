@@ -14,9 +14,9 @@ c4syn is a beginner-friendly browser synthesizer built with TypeScript, Vite, an
 
 - `src/main.ts` — builds the UI and wires controls to the audio engine.
 - `src/style.css` — styles for the interface.
-- `src/audio/synth.ts` — planned home for the audio logic as the app grows.
+- `src/audio/synth.ts` — audio engine with lazy `AudioContext` setup, play/stop, waveform, gain, filter, delay, and feedback controls.
 
 ## Next step
 
-The next milestone is moving the audio wiring into `src/audio/synth.ts` so the UI code stays small and easier to learn from.
+The next milestone is polish: improve the UI, add a small amount of verification, and keep the synth module easy to read as more features are added.
 

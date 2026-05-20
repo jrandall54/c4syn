@@ -63,3 +63,8 @@
 - `AudioContext` is created lazily on first `play()`; `resume()` is awaited. `masterGain`, `delay`, and `delayFeedback` persist across plays; `osc` and `filter` are created per-play and cleared on stop.
 - `setFilter` uses `cancelScheduledValues` and `setValueAtTime` to avoid clicks on changes.
 
+## Current status
+- The synth refactor is complete: audio control lives in `src/audio/synth.ts`, and `src/main.ts` is just UI wiring.
+- Current controls: Play/Stop, waveform selection, gain, lowpass filter, delay, and feedback.
+- The remaining work is product polish and validation, not the core audio graph.
+

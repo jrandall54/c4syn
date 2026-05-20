@@ -76,7 +76,7 @@ export function initSynth() {
         },
 
         setFilter: (frequency: number) => {
-            if (filter) {
+            if (filter && audioCtx) {
                 filter.frequency.cancelScheduledValues(audioCtx.currentTime);
                 filter.frequency.setValueAtTime(frequency, audioCtx.currentTime);
             }

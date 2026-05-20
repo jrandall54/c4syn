@@ -92,7 +92,7 @@ controls.appendChild(delaySlider);
 controls.appendChild(feedbackLabel);
 controls.appendChild(feedbackSlider);
 
-playBtn.addEventListener('click', async () => { /* will create AudioContext and start nodes here */
+playBtn.addEventListener('click', async () => { 
   await synth.play();
   synth.setGain(Number(gainSlider.value));
   synth.setWaveform(waveformSelect.value as OscillatorType);
@@ -101,7 +101,7 @@ playBtn.addEventListener('click', async () => { /* will create AudioContext and 
   synth.setFeedback(Number(feedbackSlider.value));
 });
 
-stopBtn.addEventListener('click', () => { /* stop logic goes here */
+stopBtn.addEventListener('click', () => { 
   synth.stop();
 });
 
