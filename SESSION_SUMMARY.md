@@ -68,3 +68,26 @@
 - Current controls: Play/Stop, waveform selection, gain, lowpass filter, delay, and feedback.
 - The remaining work is product polish and validation, not the core audio graph.
 
+---
+
+## Session: 2026-05-19 — Deployment & wrap-up
+
+### What we completed in this session
+- Added `vite.config.ts` with `base: '/c4syn/'` so built assets load correctly on GitHub Pages.
+- Created a GitHub Actions workflow `.github/workflows/deploy.pages.yml` to build and publish the `dist/` folder to GitHub Pages on pushes to `main`.
+- Migrated ESLint to a flat `eslint.config.cjs` and verified `npm run lint` runs cleanly.
+- Bumped the project version to `1.0.0`, committed, and pushed the changes.
+- Verified the site is live at the GitHub Pages URL and functioning in the browser.
+
+### Notes for learners
+- The `vite.config.ts` `base` setting rewrites asset paths during the build so `/src/main.ts` and `/favicon.svg` are looked up relative to the project path on GitHub Pages.
+- The GitHub Actions workflow automates `npm ci`, `npm run build`, and the Pages deployment; the workflow needs Pages to be enabled in the repository settings (Pages source: GitHub Actions).
+- We used small, focused commits for each milestone and pushed regularly so the repo history documents the learning steps.
+
+### Verification performed
+- Ran `npm run lint` locally — no issues reported.
+- Built locally with `npm run build` to ensure `dist/` contains the expected static files.
+- Confirmed the published Pages site loads and the Play/Stop controls render in the browser.
+
+Session complete.
+

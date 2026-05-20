@@ -20,3 +20,7 @@ c4syn is a beginner-friendly browser synthesizer built with TypeScript, Vite, an
 
 The next milestone is polish: improve the UI, add a small amount of verification, and keep the synth module easy to read as more features are added.
 
+## Live demo
+
+- Hosted on GitHub Pages: https://jrandall54.github.io/c4syn/
+
