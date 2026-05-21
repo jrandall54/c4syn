@@ -6,62 +6,95 @@ export function initSynth() {
     let filter: BiquadFilterNode | null = null;
     let delay: DelayNode | null = null;
     let delayFeedback: GainNode | null = null;
+    let currentWaveform: OscillatorType = 'sine';
+
+
+    // Convert MIDI note number to frequency (A4 = 69 => 440 Hz)
+    const midiNoteToFrequency = (note: number) => 440 * Math.pow(2, (note - 69) / 12);
+
+    // Track active notes: MIDI note -> per-note nodes (oscillator + gain)
+    const activeNotes = new Map<number, { osc: OscillatorNode; gain: GainNode }>();
+
+    // Ensure AudioContext and global nodes exist (used by noteOn and play)
+    const ensureAudio = async () => {
+        if (!audioCtx) {
+            audioCtx = new AudioContext();
+        }
+        await audioCtx.resume();
+
+        if (!masterGain && audioCtx) {
+            masterGain = audioCtx.createGain();
+            masterGain.connect(audioCtx.destination);
+            masterGain.gain.value = 0.2; // default master level
+        }
+
+        if (!delay && audioCtx && masterGain) {
+            delay = audioCtx.createDelay();
+            delay.delayTime.value = 0;
+            delay.connect(masterGain);
+        }
+
+        if (!delayFeedback && audioCtx && delay) {
+            delayFeedback = audioCtx.createGain();
+            delayFeedback.gain.value = 0;
+            delay.connect(delayFeedback);
+            delayFeedback.connect(delay);
+        }
+
+        if (!filter && audioCtx && delay) {
+            filter = audioCtx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.value = 1200;
+            filter.connect(delay);
+        }
+    }
 
     return {
-        play: async () => {
-            if (!audioCtx) {
-                audioCtx = new AudioContext();
-            }
-            await audioCtx.resume();
 
-            if (!masterGain) {
-                masterGain = audioCtx.createGain();
-                masterGain.connect(audioCtx.destination);
-                masterGain.gain.value = 0.2;
-            }
+        // Create and start a per-note oscillator + gain, store in activeNotes
+        noteOn: async (note: number, velocity = 1) => {
+            await ensureAudio();
+            if (!audioCtx) return;
+            if (activeNotes.has(note)) return; // already playing
+            
+            const voiceOsc = audioCtx.createOscillator();
+            voiceOsc.type = currentWaveform;
+            voiceOsc.frequency.value = midiNoteToFrequency(note);
 
-            if (!delay) {
-                delay = audioCtx.createDelay();
-                delay.delayTime.value = 0;
-                delay.connect(masterGain);
-            }
+            const voiceGain = audioCtx.createGain();
+            voiceGain.gain.value = Math.max(0, Math.min(1, velocity)) * 0.2; // scale velocity
 
-            if (!delayFeedback) {
-                delayFeedback = audioCtx.createGain();
-                delayFeedback.gain.value = 0;
-                delay.connect(delayFeedback);
-                delayFeedback.connect(delay);
-            }
+            voiceOsc.connect(voiceGain);
 
-            if (!filter) {
-                filter = audioCtx.createBiquadFilter();
-                filter.type = 'lowpass';
-                filter.frequency.value = 1200;
-                filter.connect(delay);
-            }
-
-            if (!osc) {
-                osc = audioCtx.createOscillator();
-                osc.type = 'sine';
-                osc.connect(filter);
-                osc.start();
-            }
-
-
-        },
-
-        stop: () => {
+            // routing: connect to filter (wet) if present, else masterGain, else destination
             if (filter) {
-                try { filter.disconnect(); } catch {}
-                filter = null;
+                voiceGain.connect(filter);
+            } else if (masterGain) {
+                voiceGain.connect(masterGain);
+            } else {
+                voiceGain.connect(audioCtx.destination);
             }
 
-            if (osc) {
-                try { osc.stop(); } catch {}
-                try { osc.disconnect(); } catch {}
-                osc = null;
-            }
+            voiceOsc.start();
+            activeNotes.set(note, { osc: voiceOsc, gain: voiceGain });
         },
+
+        noteOff: (note: number) => {
+            if (!audioCtx) return;
+            const voice = activeNotes.get(note);
+            if (!voice) return;
+            
+            const t = audioCtx.currentTime;
+            voice.gain.gain.setValueAtTime(voice.gain.gain.value, t);
+            voice.gain.gain.linearRampToValueAtTime(0, t + 0.03);
+            
+            try {
+                voice.osc.stop(t + 0.04) 
+            } catch {};
+            
+            activeNotes.delete(note);
+
+        },    
 
         setGain: (value: number) => {
             if (masterGain) {
@@ -70,9 +103,7 @@ export function initSynth() {
         },
 
         setWaveform: (type: OscillatorType) => {
-            if (osc) {
-                osc.type = type;
-            }
+            currentWaveform = type;          
         },
 
         setFilter: (frequency: number) => {

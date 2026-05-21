@@ -8,6 +8,8 @@ const controls = document.getElementById('controls')! as HTMLDivElement
 
 const synth = initSynth();
 
+const TEST_NOTE = 60;
+
 const playBtn = document.createElement('button') as HTMLButtonElement
 playBtn.id = 'play';
 playBtn.textContent = 'Play';
@@ -93,16 +95,16 @@ controls.appendChild(feedbackLabel);
 controls.appendChild(feedbackSlider);
 
 playBtn.addEventListener('click', async () => { 
-  await synth.play();
-  synth.setGain(Number(gainSlider.value));
   synth.setWaveform(waveformSelect.value as OscillatorType);
+  await synth.noteOn(TEST_NOTE, 1);
+  synth.setGain(Number(gainSlider.value));
   synth.setFilter(Number(filterSlider.value));
-  synth.setDelay(Number(delaySlider.value));
+  synth.setDelay(Number(delaySlider));
   synth.setFeedback(Number(feedbackSlider.value));
 });
 
 stopBtn.addEventListener('click', () => { 
-  synth.stop();
+  synth.noteOff(TEST_NOTE);
 });
 
 gainSlider.addEventListener('input', () => {
