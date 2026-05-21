@@ -1,7 +1,7 @@
 export function initSynth() {
 
     let audioCtx: AudioContext | null = null;
-    let osc: OscillatorNode | null = null;
+    // let osc: OscillatorNode | null = null;
     let masterGain: GainNode | null = null;
     let filter: BiquadFilterNode | null = null;
     let delay: DelayNode | null = null;
