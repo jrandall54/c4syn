@@ -1,26 +1,25 @@
 # c4syn
 
-c4syn is a beginner-friendly browser synthesizer built with TypeScript, Vite, and the Web Audio API. It is structured as a learning project with no final goal in mind.
+c4syn is a browser-based synthesizer built with TypeScript, Vite, and the Web Audio API. It is being developed as a small learning project that grows in clear milestones.
 
-## What it does now
+## Current status
 
-- Start and stop a generated sound in the browser.
-- Switch between sine, square, sawtooth, and triangle waveforms.
-- Adjust master volume with a gain slider.
-- Shape the sound with a lowpass filter.
-- Add echo with delay and feedback controls.
+- v2.2 is complete: the app now has a playable on-screen white-key keyboard with visual feedback.
+- Delay now uses a wet/dry mix, so notes play immediately while echo is layered on top.
+- The basic control panel is in place for waveform, gain, filter, delay, feedback, and wet mix.
+
+## Goals
+
+- Add black keys and basic UI polish next.
+- Add QWERTY key mapping and octave controls after that.
+- Continue toward voice allocation, MIDI input, and richer synthesis features over later milestones.
 
 ## Project structure
 
 - `src/main.ts` — builds the UI and wires controls to the audio engine.
-- `src/style.css` — styles for the interface.
-- `src/audio/synth.ts` — audio engine with lazy `AudioContext` setup, play/stop, waveform, gain, filter, delay, and feedback controls.
+- `src/audio/synth.ts` — audio engine and note-based playback.
 
-## Next step
-
-The next milestone is polish: improve the UI, add a small amount of verification, and keep the synth module easy to read as more features are added.
-
-## Live demo
+## Demo
 
 - Hosted on GitHub Pages: https://jrandall54.github.io/c4syn/
 
