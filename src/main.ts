@@ -6,6 +6,11 @@ app.innerHTML = '<h1>c4syn</h1><div id="controls"></div>'
 
 const controls = document.getElementById('controls')! as HTMLDivElement
 
+const startOverlay = document.createElement('button');
+startOverlay.textContent = 'Tap to Start';
+startOverlay.id = 'start-overlay';
+document.body.appendChild(startOverlay);
+
 const synth = initSynth();
 
 const keyboard = document.createElement('div');
@@ -46,7 +51,7 @@ for (const { label, note } of whiteKeys) {
   keyButton.className = 'key';
   keyButton.textContent = label;
 
-  keyButton.addEventListener('pointerdown', (ev: PointerEvent) => {
+  keyButton.addEventListener('pointerdown', async (ev: PointerEvent) => {
     // ignore non-primary mouse buttons
     if ('button' in ev && (ev as PointerEvent).button !== 0) return;
     
@@ -55,8 +60,8 @@ for (const { label, note } of whiteKeys) {
     
     setKeyState(note, true);
     syncSynthSettings();
-    
-    synth.noteOn(note, 1).catch(() => {});
+
+    void synth.noteOn(note, 1);
   });
 
   const release = () => {
@@ -72,12 +77,6 @@ for (const { label, note } of whiteKeys) {
   keyboard.appendChild(keyButton);
 
 }
-
-const TEST_NOTE = 60;
-
-const playBtn = document.createElement('button') as HTMLButtonElement
-playBtn.id = 'play';
-playBtn.textContent = 'Play';
 
 const stopBtn = document.createElement('button') as HTMLButtonElement
 stopBtn.id = 'stop';
@@ -158,7 +157,6 @@ wetSlider.max = '1';
 wetSlider.step = '0.01';
 wetSlider.value = '0.05';
 
-controls.appendChild(playBtn);
 controls.appendChild(stopBtn);
 controls.appendChild(gainLabel);
 controls.appendChild(gainSlider);
@@ -172,20 +170,17 @@ controls.appendChild(feedbackSlider);
 controls.appendChild(wetLabel);
 controls.appendChild(wetSlider);
 
+
 syncSynthSettings();
 
-playBtn.addEventListener('click', async () => { 
-  synth.setWaveform(waveformSelect.value as OscillatorType);
-  await synth.noteOn(TEST_NOTE, 1);
-  synth.setGain(Number(gainSlider.value));
-  synth.setFilter(Number(filterSlider.value));
-  synth.setDelay(Number(delaySlider.value));
-  synth.setFeedback(Number(feedbackSlider.value));
-  synth.setWet(Number(wetSlider.value));
-});
+
+startOverlay.addEventListener('click', async () => {
+  await synth.resume();
+  startOverlay.remove();
+})
 
 stopBtn.addEventListener('click', () => { 
-  synth.noteOff(TEST_NOTE);
+  synth.stopAll();
 });
 
 gainSlider.addEventListener('input', () => {

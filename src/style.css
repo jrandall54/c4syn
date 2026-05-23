@@ -294,6 +294,37 @@ code {
     border-right-color: var(--border);
   }
 }
+/* full screen overlay */
+/* #start-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  width: 100vw;
+  height: 100vh;
+  border: none;
+  border-radius: 0;
+  font-size: 28px;
+  appearance: none;
+  background: rgba(0, 0, 0, 0.85);
+  color: white;
+} */
+
+#start-overlay {
+  position: fixed;
+  font-size: 42px;
+  inset: 50% auto auto 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  border: none;
+  border-radius: 12px;
+  padding: 1000px 1120px;
+  background: rgba(20, 20, 24, 0.67);
+  color: white;
+}
+
+#keyboard button {
+  touch-action: none;
+}
 
 #keyboard .down {
   transform: translateY(1px);

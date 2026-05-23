@@ -65,7 +65,7 @@ export function initSynth() {
             await ensureAudio();
             if (!audioCtx) return;
             if (activeNotes.has(note)) return; // already playing
-            
+
             const voiceOsc = audioCtx.createOscillator();
             voiceOsc.type = currentWaveform;
             voiceOsc.frequency.value = midiNoteToFrequency(note);
@@ -92,18 +92,36 @@ export function initSynth() {
             if (!audioCtx) return;
             const voice = activeNotes.get(note);
             if (!voice) return;
-            
+
             const t = audioCtx.currentTime;
             voice.gain.gain.setValueAtTime(voice.gain.gain.value, t);
             voice.gain.gain.linearRampToValueAtTime(0, t + 0.03);
-            
+
             try {
-                voice.osc.stop(t + 0.04) 
-            } catch {};
-            
+                voice.osc.stop(t + 0.04)
+            } catch { };
+
             activeNotes.delete(note);
 
-        },    
+        },
+
+        resume: async () => {
+            await ensureAudio();
+        },
+
+        stopAll: () => {
+            if (!audioCtx) return;
+
+            const t = audioCtx.currentTime;
+            for (const voice of activeNotes.values()) {
+                voice.gain.gain.setValueAtTime(voice.gain.gain.value, t);
+                voice.gain.gain.linearRampToValueAtTime(0, t + 0.03);
+
+                try { voice.osc.stop(t + 0.04) } catch { }
+            }
+
+            activeNotes.clear();
+        },
 
         setGain: (value: number) => {
             if (masterGain) {
@@ -112,7 +130,7 @@ export function initSynth() {
         },
 
         setWaveform: (type: OscillatorType) => {
-            currentWaveform = type;          
+            currentWaveform = type;
         },
 
         setFilter: (frequency: number) => {
