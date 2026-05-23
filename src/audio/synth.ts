@@ -7,6 +7,8 @@ export function initSynth() {
     let delay: DelayNode | null = null;
     let delayFeedback: GainNode | null = null;
     let currentWaveform: OscillatorType = 'sine';
+    let wetGain: GainNode | null = null;
+
 
 
     // Convert MIDI note number to frequency (A4 = 69 => 440 Hz)
@@ -28,10 +30,16 @@ export function initSynth() {
             masterGain.gain.value = 0.2; // default master level
         }
 
-        if (!delay && audioCtx && masterGain) {
+        if (!wetGain && masterGain && audioCtx) {
+            wetGain = audioCtx.createGain();
+            wetGain.gain.value = 1;
+            wetGain.connect(masterGain);
+        }
+
+        if (!delay && audioCtx && wetGain) {
             delay = audioCtx.createDelay();
             delay.delayTime.value = 0;
-            delay.connect(masterGain);
+            delay.connect(wetGain);
         }
 
         if (!delayFeedback && audioCtx && delay) {
@@ -41,10 +49,11 @@ export function initSynth() {
             delayFeedback.connect(delay);
         }
 
-        if (!filter && audioCtx && delay) {
+        if (!filter && audioCtx && delay && masterGain) {
             filter = audioCtx.createBiquadFilter();
             filter.type = 'lowpass';
             filter.frequency.value = 1200;
+            filter.connect(masterGain);
             filter.connect(delay);
         }
     }
@@ -125,6 +134,12 @@ export function initSynth() {
                 delayFeedback.gain.value = amount;
             }
 
+        },
+
+        setWet: (amount: number) => {
+            if (wetGain) {
+                wetGain.gain.value = amount;
+            }
         },
     }
 

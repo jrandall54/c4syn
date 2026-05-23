@@ -28,9 +28,10 @@ A prioritized feature plan spanning versions v2–v5, with actionable milestones
 Goal: make the synth playable from keyboard and on-screen controls
 
 - 2.1 Replace `play`/`stop` with `noteOn(note, velocity?)` and `noteOff(note)` API (2–4h)
-- 2.2 Implement on-screen keyboard component with visual feedback (2–4h)
-- 2.3 Add QWERTY key mapping and octave shift controls (1–2h)
-- 2.4 Basic voice allocation (monophonic → 4-voice polyphony) (4–6h)
+- 2.2 Implement on-screen keyboard component with visual feedback; add wet/dry delay mix (`wetGain`) so notes play immediately with delay on top (completed)
+- 2.3 Add black keys to the on-screen keyboard and make basic UI design changes to support the full keyboard layout (1–2h)
+- 2.4 Add QWERTY key mapping and octave shift controls (1–2h)
+- 2.5 Basic voice allocation (monophonic → 4-voice polyphony) (4–6h)
 
 ### v3 — Enhanced Synthesis & Modulation
 Goal: richer sound design capabilities

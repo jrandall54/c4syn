@@ -294,3 +294,7 @@ code {
     border-right-color: var(--border);
   }
 }
+
+#keyboard .down {
+  transform: translateY(1px);
+}
