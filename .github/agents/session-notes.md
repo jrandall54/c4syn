@@ -116,3 +116,47 @@
 - v2.2 Implement an on-screen keyboard component with visual feedback.
 - v2.3 Add QWERTY key mapping and octave shift controls.
 - v2.4 Basic voice allocation (monophonic → 4-voice polyphony).
+
+## Session 5 — 2026-05-23
+
+## 1. Work Completed
+- Delivered the v2.2 synth milestone: a playable on-screen white-key keyboard from C4 through C5 with per-key visual feedback.
+- Routed each key to note-based playback using `noteOn(note, velocity?)` and `noteOff(note)` instead of the old play/stop flow.
+- Added wet/dry delay mixing so the dry note is heard immediately while echo is layered on top through the delay path.
+- Kept the synth state in a per-note `activeNotes` map so individual voices can be released cleanly.
+- Added a `stopAll()` panic path to fade out and clear any active notes.
+- Added a full-screen startup overlay so the first mobile tap can serve as the initial user gesture.
+- Adjusted mobile interaction styling so the keyboard buttons use `touch-action: none` and do not fight browser touch behavior.
+- Kept the keyboard focused on note playback while the overlay handles the first interaction gate.
+- Refreshed the README to reflect the current project status, goals, and structure in a concise way.
+- Updated the roadmap so v2.2 is marked complete and a new v2.3 milestone was inserted for black keys and basic UI design changes.
+- Renumbered the later v2 milestones so the roadmap remains sequential.
+- Created and pushed a commit for the overlay/mobile fix changes and a separate commit for the README refresh.
+
+## 2. Key Concepts Learned
+- Mobile Web Audio startup often needs a clear first user gesture before playback feels reliable.
+- A startup overlay is a simpler UX than mixing audio-unlock behavior into the synth controls.
+- `touch-action: none` helps keep touch interaction focused on the custom keyboard instead of browser gestures.
+- Concise documentation is more useful when it describes the current state, near-term goals, and project layout without too much implementation detail.
+
+## 3. Code & TypeScript Details
+- Built the keyboard as a data-driven loop over a `whiteKeys` array, which creates one button per note and keeps the mapping easy to extend.
+- Used pointer events plus `setPointerCapture()` so press/release behavior stays stable on touch devices.
+- Used `syncSynthSettings()` to push waveform, gain, filter, delay, feedback, and wet mix settings into the synth before a note starts.
+- Used a full-screen overlay button as the first interaction surface instead of a regular in-line control.
+- Used pointer events and button state toggling for the on-screen keys.
+- Kept the synth API centered around note-based playback and a panic `stopAll()` method.
+- Updated the roadmap copy to reflect milestone completion and renumbering cleanly.
+
+## 4. Project Structure Changes
+- Modified [src/main.ts](../../src/main.ts) — startup overlay and keyboard wiring.
+- Modified [src/style.css](../../src/style.css) — overlay sizing/positioning and touch behavior.
+- Modified [src/audio/synth.ts](../../src/audio/synth.ts) — synth API cleanup and panic-stop support.
+- Modified [README.md](../../README.md) — concise project status and goals.
+- Modified [ROADMAP.md](../../ROADMAP.md) — mark v2.2 complete and insert v2.3.
+- Modified [.github/agents/session-notes.md](./session-notes.md) — updated session summary.
+
+## 5. Next Steps (from roadmap only)
+- v2.3 Add black keys to the on-screen keyboard and make basic UI design changes to support the full keyboard layout.
+- v2.4 Add QWERTY key mapping and octave shift controls.
+- v2.5 Basic voice allocation (monophonic → 4-voice polyphony).
