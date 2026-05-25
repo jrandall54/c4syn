@@ -1,4 +1,5 @@
 import './style.css'
+import kbSvg from './assets/design/kb.svg?raw';
 import { initSynth } from './audio/synth';
 
 const app = document.getElementById('app')! as HTMLDivElement
@@ -15,7 +16,29 @@ const synth = initSynth();
 
 const keyboard = document.createElement('div');
 keyboard.id = 'keyboard';
+keyboard.innerHTML = kbSvg;
 controls.appendChild(keyboard);
+
+const keyIdToMidi: Record<string, number> = {
+  C4: 60, Db4: 61, D4: 62, Eb4: 63, E4: 64,
+  F4: 65, Gb4: 66, G4: 67, Ab4: 68, A4: 69,
+  Bb4: 70, B4: 71, C5: 72,
+}
+
+const svgKeyEls = new Map<number, SVGPathElement>();
+
+for (const [id, midi] of Object.entries(keyIdToMidi)) {
+  const el = keyboard.querySelector(`#${id}`);
+  if (el instanceof SVGPathElement) {
+    svgKeyEls.set(midi, el);
+  }
+}
+
+const keyboardSvg = keyboard.querySelector('svg');
+if (keyboardSvg) {
+  keyboardSvg.setAttribute('width', '100%');
+  keyboardSvg.removeAttribute('height');
+}
 
 const whiteKeys = [
   { label: 'C4', note: 60 },

@@ -28,8 +28,8 @@ A prioritized feature plan spanning versions v2–v5, with actionable milestones
 Goal: make the synth playable from keyboard and on-screen controls
 
 - 2.1 Replace `play`/`stop` with `noteOn(note, velocity?)` and `noteOff(note)` API (2–4h)
-- 2.2 Implement on-screen keyboard component with visual feedback; add wet/dry delay mix (`wetGain`) so notes play immediately with delay on top (completed)
-- 2.3 Add black keys to the on-screen keyboard and make basic UI design changes to support the full keyboard layout (1–2h)
+- 2.2 Implement on-screen keyboard component with visual feedback; add wet/dry delay mix (`wetGain`) so notes play immediately with delay on top (2–4h) — completed
+- 2.3 Implement on-screen piano keyboard graphic and wire one octave (C4–C5): map white keys, add black keys (C#4, D#4, F#4, G#4, A#4), ensure overlay and pointer-blocking; pointer-only input (1–2h)
 - 2.4 Add QWERTY key mapping and octave shift controls (1–2h)
 - 2.5 Basic voice allocation (monophonic → 4-voice polyphony) (4–6h)
 
