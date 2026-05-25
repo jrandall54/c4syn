@@ -27,7 +27,7 @@ jobs:
       - name: Install deps
         run: npm ci
 
-      - name: Debug: show git remotes & workspace
+      - name: "Debug: show git remotes & workspace"
         run: |
           echo "=== git remote -v ==="
           git remote -v || true
