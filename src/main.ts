@@ -27,6 +27,11 @@ const keyIdToMidi: Record<string, number> = {
 
 const svgKeyEls = new Map<number, SVGPathElement>();
 
+const setSvgKeyState = (note: number, isActive: boolean) => {
+  const keyEl = svgKeyEls.get(note);
+  if (keyEl) keyEl.classList.toggle('down', isActive);
+};
+
 for (const [id, midi] of Object.entries(keyIdToMidi)) {
   const el = keyboard.querySelector(`#${id}`);
   if (el instanceof SVGPathElement) {
@@ -34,11 +39,34 @@ for (const [id, midi] of Object.entries(keyIdToMidi)) {
   }
 }
 
+for (const [midi, keyEl] of svgKeyEls) {
+  const release = () => {
+    setSvgKeyState(midi, false);
+    synth.noteOff(midi);
+  };
+
+  keyEl.addEventListener('pointerdown', async (ev: PointerEvent) => {
+    if (ev.button !== 0) return;
+
+    try { keyEl.setPointerCapture(ev.pointerId) } catch {}
+
+    setSvgKeyState(midi, true);
+    syncSynthSettings();
+    void synth.noteOn(midi, 1);
+  });
+
+  keyEl.addEventListener('pointerup', release);
+  keyEl.addEventListener('pointercancel', release);
+  keyEl.addEventListener('lostpointercapture', release);
+}
+
 const keyboardSvg = keyboard.querySelector('svg');
 if (keyboardSvg) {
   keyboardSvg.setAttribute('width', '100%');
   keyboardSvg.removeAttribute('height');
 }
+
+
 
 const whiteKeys = [
   { label: 'C4', note: 60 },
