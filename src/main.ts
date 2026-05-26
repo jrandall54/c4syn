@@ -19,6 +19,10 @@ keyboard.id = 'keyboard';
 keyboard.innerHTML = kbSvg;
 controls.appendChild(keyboard);
 
+const effectsPanel = document.createElement('div');
+effectsPanel.id = 'effects-panel';
+controls.appendChild(effectsPanel);
+
 const keyIdToMidi: Record<string, number> = {
   C4: 60, Db4: 61, D4: 62, Eb4: 63, E4: 64,
   F4: 65, Gb4: 66, G4: 67, Ab4: 68, A4: 69,
@@ -48,7 +52,7 @@ for (const [midi, keyEl] of svgKeyEls) {
   keyEl.addEventListener('pointerdown', async (ev: PointerEvent) => {
     if (ev.button !== 0) return;
 
-    try { keyEl.setPointerCapture(ev.pointerId) } catch {}
+    try { keyEl.setPointerCapture(ev.pointerId) } catch { }
 
     setSvgKeyState(midi, true);
     syncSynthSettings();
@@ -65,8 +69,6 @@ if (keyboardSvg) {
   keyboardSvg.setAttribute('width', '100%');
   keyboardSvg.removeAttribute('height');
 }
-
-
 
 const whiteKeys = [
   { label: 'C4', note: 60 },
@@ -105,10 +107,10 @@ for (const { label, note } of whiteKeys) {
   keyButton.addEventListener('pointerdown', async (ev: PointerEvent) => {
     // ignore non-primary mouse buttons
     if ('button' in ev && (ev as PointerEvent).button !== 0) return;
-    
+
     // keep the pointer captured by this element so pointerup/lostpointercapture fires reliably
-    try { keyButton.setPointerCapture(ev.pointerId); } catch{}
-    
+    try { keyButton.setPointerCapture(ev.pointerId); } catch { }
+
     setKeyState(note, true);
     syncSynthSettings();
 
@@ -134,7 +136,7 @@ stopBtn.id = 'stop';
 stopBtn.textContent = 'Stop';
 
 const gainLabel = document.createElement('label');
-gainLabel.textContent = 'Gain: ';
+gainLabel.textContent = 'Volume: ';
 
 const gainSlider = document.createElement('input') as HTMLInputElement;
 gainSlider.type = 'range';
@@ -187,7 +189,7 @@ delaySlider.step = '0.01';
 delaySlider.value = '0';
 
 const feedbackLabel = document.createElement('label');
-feedbackLabel.textContent = 'Feedback: ';
+feedbackLabel.textContent = 'Feedback (repeats)';
 
 const feedbackSlider = document.createElement('input')! as HTMLInputElement;
 feedbackSlider.id = 'feedback';
@@ -198,7 +200,7 @@ feedbackSlider.step = '0.01';
 feedbackSlider.value = '0';
 
 const wetLabel = document.createElement('label');
-wetLabel.textContent = 'Wet: ';
+wetLabel.textContent = 'Delay Volume';
 
 const wetSlider = document.createElement('input')! as HTMLInputElement;
 wetSlider.id = 'wet';
@@ -208,29 +210,27 @@ wetSlider.max = '1';
 wetSlider.step = '0.01';
 wetSlider.value = '0.05';
 
-controls.appendChild(stopBtn);
-controls.appendChild(gainLabel);
-controls.appendChild(gainSlider);
-controls.appendChild(waveformSelect);
-controls.appendChild(filterLabel);
-controls.appendChild(filterSlider);
-controls.appendChild(delayLabel);
-controls.appendChild(delaySlider);
-controls.appendChild(feedbackLabel);
-controls.appendChild(feedbackSlider);
-controls.appendChild(wetLabel);
-controls.appendChild(wetSlider);
-
+effectsPanel.appendChild(stopBtn);
+effectsPanel.appendChild(gainLabel);
+effectsPanel.appendChild(gainSlider);
+effectsPanel.appendChild(waveformSelect);
+effectsPanel.appendChild(filterLabel);
+effectsPanel.appendChild(filterSlider);
+effectsPanel.appendChild(delayLabel);
+effectsPanel.appendChild(delaySlider);
+effectsPanel.appendChild(feedbackLabel);
+effectsPanel.appendChild(feedbackSlider);
+effectsPanel.appendChild(wetLabel);
+effectsPanel.appendChild(wetSlider);
 
 syncSynthSettings();
-
 
 startOverlay.addEventListener('click', async () => {
   await synth.resume();
   startOverlay.remove();
 })
 
-stopBtn.addEventListener('click', () => { 
+stopBtn.addEventListener('click', () => {
   synth.stopAll();
 });
 
