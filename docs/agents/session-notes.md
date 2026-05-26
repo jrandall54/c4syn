@@ -162,7 +162,7 @@
 - Modified [src/audio/synth.ts](../../src/audio/synth.ts) — synth API cleanup and panic-stop support.
 - Modified [README.md](../../README.md) — concise project status and goals.
 - Modified [docs/ROADMAP.md](../../docs/ROADMAP.md) — mark v2.2 complete and insert v2.3.
-- Modified [.github/agents/session-notes.md](./session-notes.md) — updated session summary.
+- Modified [docs/agents/session-notes.md](docs/agents/session-notes.md) — updated session summary.
 
 ## 5. Next Steps (from roadmap only)
 - v2.3 Add black keys to the on-screen keyboard and make basic UI design changes to support the full keyboard layout.
@@ -198,7 +198,7 @@
 - Modified [index.html](../../index.html) — updated viewport meta to improve mobile rotation behavior.
 - Modified [src/main.ts](../../src/main.ts) — mounted SVG keyboard, wired pointer events to the synth, and assembled the effects panel UI.
 - Modified [src/style.css](../../src/style.css) — defined portrait/landscape layout rules for the keyboard + effects panel and ensured the SVG scales correctly.
-- Modified [.github/agents/session-notes.md](./session-notes.md) — appended this session summary.
+- Modified [docs/agents/session-notes.md](docs/agents/session-notes.md) — appended this session summary.
 
 ## 5. Next Steps (from roadmap only)
 - v2.4 Add QWERTY key mapping and octave shift controls.
