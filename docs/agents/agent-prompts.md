@@ -1,6 +1,6 @@
 New Chat Window 
 
-Follow .github/agents/copilot-instructions.md exactly.
+Follow docs/agents/copilot-instructions.md exactly.
 
 We are currently working ONLY on:
 Phase X → Step Y of roadmap.md

@@ -20,7 +20,7 @@
 - `AudioParam` scheduling API: `cancelScheduledValues()` + `setValueAtTime()` to prevent stepping/clicks.
 
 ## 4. Project Structure Changes
-- Modified [src/index.html](../../src/index.html) — minimal app shell (controls).
+- Modified [index.html](../../index.html) — minimal app shell (controls).
 - Modified [src/main.ts](../../src/main.ts) — DOM wiring & audio node management.
 - Modified [src/style.css](../../src/style.css) — small control styles.
 - Created [CHAT_CONTEXT.md](../../CHAT_CONTEXT.md) — short repo-level context for agents.
@@ -161,7 +161,7 @@
 - Modified [src/style.css](../../src/style.css) — overlay sizing/positioning and touch behavior.
 - Modified [src/audio/synth.ts](../../src/audio/synth.ts) — synth API cleanup and panic-stop support.
 - Modified [README.md](../../README.md) — concise project status and goals.
-- Modified [ROADMAP.md](../../ROADMAP.md) — mark v2.2 complete and insert v2.3.
+- Modified [docs/ROADMAP.md](../../docs/ROADMAP.md) — mark v2.2 complete and insert v2.3.
 - Modified [.github/agents/session-notes.md](./session-notes.md) — updated session summary.
 
 ## 5. Next Steps (from roadmap only)
