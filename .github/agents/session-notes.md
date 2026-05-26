@@ -1,4 +1,4 @@
-## Session 1 — 2026-05-15 09:00 PDT → 2026-05-17 17:30 PDT
+# Session 1 — 2026-05-15 09:00 PDT → 2026-05-17 17:30 PDT
 
 ## 1. Work Completed
 - Replaced Vite demo with a minimal app shell and control UI.
@@ -30,7 +30,9 @@
 - Move audio logic into [src/audio/synth.ts](../../src/audio/synth.ts) so [src/main.ts](../../src/main.ts) is UI wiring only.
 - Add verification steps and commit after small milestones.
 
-## Session 2 — 2026-05-18 14:00 PDT → 2026-05-18 15:20 PDT
+---
+
+# Session 2 — 2026-05-18 14:00 PDT → 2026-05-18 15:20 PDT
 
 ## 1. Work Completed
 - Implemented `initSynth()` in [src/audio/synth.ts](../../src/audio/synth.ts) and moved audio node declarations into its scope.
@@ -56,7 +58,9 @@
 ## 5. Next Steps (from roadmap only)
 - Product polish and validation (UI and verification).
 
-## Session 3 — 2026-05-19
+---
+
+# Session 3 — 2026-05-19
 
 ## 1. Work Completed
 - Added [vite.config.ts](../../vite.config.ts) with `base: '/c4syn/'` for GitHub Pages.
@@ -82,7 +86,9 @@
 ## 5. Next Steps (from roadmap only)
 - Continue with UI polish and input/playability roadmap items.
 
-## Session 4 — 2026-05-20 23:13
+---
+
+# Session 4 — 2026-05-20 23:13
 
 ## 1. Work Completed
 - Implemented a note-based synth API in the engine: `noteOn(note, velocity?)` and `noteOff(note)`.
@@ -117,7 +123,9 @@
 - v2.3 Add QWERTY key mapping and octave shift controls.
 - v2.4 Basic voice allocation (monophonic → 4-voice polyphony).
 
-## Session 5 — 2026-05-23
+---
+
+# Session 5 — 2026-05-23
 
 ## 1. Work Completed
 - Delivered the v2.2 synth milestone: a playable on-screen white-key keyboard from C4 through C5 with per-key visual feedback.
@@ -158,5 +166,40 @@
 
 ## 5. Next Steps (from roadmap only)
 - v2.3 Add black keys to the on-screen keyboard and make basic UI design changes to support the full keyboard layout.
+- v2.4 Add QWERTY key mapping and octave shift controls.
+- v2.5 Basic voice allocation (monophonic → 4-voice polyphony).
+
+---
+
+# Session 6 — 2026-05-26
+
+## 1. Work Completed
+- Implemented an inline SVG-based on-screen keyboard by mounting [src/assets/design/kb.svg](../../src/assets/design/kb.svg) into the app.
+- Added an explicit SVG key ID → MIDI note mapping (C4–C5, including black keys) and wired pointer events to `synth.noteOn(...)` / `synth.noteOff(...)`.
+- Kept the legacy button keyboard as a fallback (still present alongside the SVG keyboard).
+- Added/expanded an effects panel UI and bound controls to synth setters (waveform, gain, filter, delay, feedback, wet).
+- Stabilized mobile rotation behavior by adjusting the viewport meta tag (Chrome/Safari behavior alignment).
+- Simplified viewport/orientation handling to rely primarily on CSS `@media (orientation: ...)` rules rather than JS-driven viewport hacks.
+
+## 2. Key Concepts Learned
+- Inline SVG as UI: when SVG is injected into the DOM, its internal elements become addressable targets for pointer input (e.g., `querySelector('#C4')`).
+- Pointer Events model: `pointerdown`/`pointerup`/`pointercancel`/`lostpointercapture` is a robust set for touch + mouse.
+- Pointer capture: `setPointerCapture(pointerId)` helps ensure release events are delivered even if a finger drifts off the original key.
+- Responsive layout “two-state” thinking: using `@media (orientation: landscape)` and `@media (orientation: portrait)` to enforce deterministic layouts.
+- Mobile viewport meta: correct `<meta name="viewport" ...>` configuration can be the difference between reliable rotation layout vs inconsistent zoom/viewport behavior.
+
+## 3. Code & TypeScript Details
+- Used `Record<string, number>` for the SVG key ID → MIDI mapping, then iterated via `Object.entries(...)`.
+- Used `Map<number, SVGPathElement>` to store MIDI note → SVG element references for quick state updates.
+- Used TypeScript DOM typing patterns like `document.getElementById('app')! as HTMLDivElement` and runtime narrowing via `instanceof SVGPathElement`.
+- Used minimal helper functions (`syncSynthSettings()`, “release” handlers) to keep event logic consistent across both SVG keys and fallback button keys.
+
+## 4. Project Structure Changes
+- Modified [index.html](../../index.html) — updated viewport meta to improve mobile rotation behavior.
+- Modified [src/main.ts](../../src/main.ts) — mounted SVG keyboard, wired pointer events to the synth, and assembled the effects panel UI.
+- Modified [src/style.css](../../src/style.css) — defined portrait/landscape layout rules for the keyboard + effects panel and ensured the SVG scales correctly.
+- Modified [.github/agents/session-notes.md](./session-notes.md) — appended this session summary.
+
+## 5. Next Steps (from roadmap only)
 - v2.4 Add QWERTY key mapping and octave shift controls.
 - v2.5 Basic voice allocation (monophonic → 4-voice polyphony).

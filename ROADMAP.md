@@ -4,7 +4,7 @@ A prioritized feature plan spanning versions v2–v5, with actionable milestones
 
 ## Overview
 
-**Current state:** v1 (basic synth engine, single oscillator, play/stop controls)
+**Current state:** v2.x (note-based synth API, on-screen keyboard input, effects controls; UI polish in progress)
 **Goal:** Build towards a fully playable, polyphonic Web Audio synthesizer with effects, MIDI support, a sequencer, and a polished UI.
 
 ---
