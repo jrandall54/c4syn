@@ -70,6 +70,36 @@ if (keyboardSvg) {
   keyboardSvg.removeAttribute('height');
 }
 
+const qwertyMap: Record<string, number> = {
+  // C3 row
+  KeyZ: 48, KeyS: 49, KeyX: 50, KeyD: 51, KeyC: 52,
+  KeyV: 53, KeyG: 54, KeyB: 55, KeyH: 56, KeyN: 57,
+  KeyJ: 58, KeyM: 59, Comma: 60, KeyL: 61, Period: 62,
+  Semicolon: 63, Slash: 64,
+
+  // C4 row
+  KeyQ: 60, Digit2: 61, KeyW: 62, Digit3: 63, KeyE: 64,
+  KeyR: 65, Digit5: 66, KeyT: 67, Digit6: 68, KeyY: 69,
+  Digit7: 70, KeyU: 71, KeyI: 72, Digit9: 73, KeyO: 74,
+  Digit0: 75, KeyP: 76, BracketLeft: 77, Equal: 78, BracketRight: 79,
+};
+let octaveOffset = 0;
+
+window.addEventListener('keydown', (ev) => {
+  if (ev.repeat) return;
+  const n = qwertyMap[ev.code];
+  if (n != null) {
+    synth.noteOn(n + octaveOffset * 12, 1);
+  }
+});
+
+window.addEventListener('keyup', (ev) => {
+  const n = qwertyMap[ev.code];
+  if (n != null) {
+    synth.noteOff(n + octaveOffset * 12);
+  }
+});
+
 const whiteKeys = [
   { label: 'C4', note: 60 },
   { label: 'D4', note: 62 },
