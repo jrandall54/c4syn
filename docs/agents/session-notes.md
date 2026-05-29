@@ -203,3 +203,39 @@
 ## 5. Next Steps (from roadmap only)
 - v2.4 Add QWERTY key mapping and octave shift controls.
 - v2.5 Basic voice allocation (monophonic → 4-voice polyphony).
+ 
+---
+
+# Session 7 — 2026-05-28
+
+## 1. Work Completed
+- Migrated the QWERTY mapping to use `KeyboardEvent.code` and verified code-name correctness.
+- Added robust physical-key handling: `activeKeys: Map<string, number>` to track which MIDI note each physical key started.
+- Replaced naive `keydown`/`keyup` handlers with tracked logic that applies `octaveOffset` at press time and prevents repeat retriggers.
+- Implemented blur/visibility cleanup (`releaseAllActiveKeys`) to avoid stuck notes when the window/tab loses focus.
+- Hooked visual feedback into physical-key events via `setSvgKeyState` and `setKeyState` and ensured `syncSynthSettings()` runs before `noteOn`.
+- Added octave controls UI (+/− buttons) that update `octaveOffset` for future presses.
+- Manually tested the changes (build/dev run, on-screen pointer keyboard, physical QWERTY, octave shifting, blur behavior) and confirmed expected behavior; marked milestone v2.4 complete.
+
+## 2. Key Concepts Learned
+- `KeyboardEvent.code` vs `ev.key`: `code` maps physical key positions and is stable across keyboard locales.
+- Active-key tracking: record the exact MIDI started by a keydown so `noteOff` always targets the same voice even if state (e.g., octave) changes.
+- Focus/visibility handling: `blur` and `visibilitychange` are required to safely release held notes across browsers and tab switches.
+- UI sync before sound: calling `syncSynthSettings()` ensures controls (waveform, gain, filter, delay) affect the note at start time.
+- Pointer event robustness: pointer capture and `lostpointercapture` remain important for reliable touch interaction.
+
+## 3. Code & TypeScript Details
+- `qwertyMap: Record<string, number>` maps `KeyboardEvent.code` strings to MIDI base notes.
+- `activeKeys: Map<string, number>` maps `ev.code` → actual MIDI note used (base + `octaveOffset * 12`).
+- Event listeners added: `window.addEventListener('keydown', ...)`, `window.addEventListener('keyup', ...)`, `window.addEventListener('blur', ...)`, `document.addEventListener('visibilitychange', ...)`.
+- Visual helpers: `setSvgKeyState(note, isActive)` and `setKeyState(note, isActive)` toggle `.down` on SVG or button elements.
+- TypeScript patterns: DOM non-null assertions (`!`), narrowed runtime checks (`instanceof SVGPathElement`), typed element references (`HTMLButtonElement`, `HTMLInputElement`), and typed synth API usage (`OscillatorType`).
+
+## 4. Project Structure Changes
+- Modified: [src/main.ts](../../src/main.ts) — added QWERTY handling, `activeKeys`, blur cleanup, and octave controls UI.
+- Modified: [docs/ROADMAP.md](../../docs/ROADMAP.md) — updated roadmap to reflect milestone progress and next items.
+- Updated: [docs/agents/session-notes.md](docs/agents/session-notes.md) — appended this session summary.
+
+## 5. Next Steps (from roadmap only)
+- v2.5 Basic voice allocation (monophonic → 4-voice polyphony)
+

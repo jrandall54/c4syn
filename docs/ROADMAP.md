@@ -30,7 +30,7 @@ Goal: make the synth playable from keyboard and on-screen controls
 - 2.1 Replace `play`/`stop` with `noteOn(note, velocity?)` and `noteOff(note)` API (2–4h)
 - 2.2 Implement on-screen keyboard component with visual feedback; add wet/dry delay mix (`wetGain`) so notes play immediately with delay on top (2–4h) — completed
 - 2.3 Implement on-screen piano keyboard graphic and wire one octave (C4–C5): map white keys, add black keys (C#4, D#4, F#4, G#4, A#4), ensure overlay and pointer-blocking; pointer-only input (1–2h)
-- 2.4 Add QWERTY key mapping and octave shift controls (1–2h)
+- 2.4 Add QWERTY key mapping and octave shift controls (1–2h) — completed
 - 2.5 Basic voice allocation (monophonic → 4-voice polyphony) (4–6h)
 
 ### v3 — Enhanced Synthesis & Modulation
@@ -92,15 +92,3 @@ Goal: complete feature set and UI polish
 
 - Use small, focused commits & PRs per milestone (1–2 features each)
 - Tag releases at major milestones (v2.0.0, v3.0.0, ...)
-- Include a smoke-test checklist in PRs (build locally, run lint/typecheck, quick play test)
-
----
-
-## Next Steps
-
-1. Review this roadmap and suggest priority changes.
-2. If accepted, create milestone issues and break v2 into a numbered TODO list and PRs.
-
-***
-
-Created from session notes — review and tell me any edits you want.
