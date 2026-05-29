@@ -85,18 +85,47 @@ const qwertyMap: Record<string, number> = {
 };
 let octaveOffset = 0;
 
+const activeKeys = new Map<string, number>();
+
 window.addEventListener('keydown', (ev) => {
   if (ev.repeat) return;
-  const n = qwertyMap[ev.code];
-  if (n != null) {
-    synth.noteOn(n + octaveOffset * 12, 1);
+  const code = ev.code;
+  if (activeKeys.has(code)) return;
+
+  const base = qwertyMap[code];
+  if (base != null) {
+    const midi = base + octaveOffset * 12;
+    activeKeys.set(code, midi);
+    setSvgKeyState(midi, true);
+    setKeyState(midi, true);
+    syncSynthSettings();
+    void synth.noteOn(midi, 1);
   }
 });
 
 window.addEventListener('keyup', (ev) => {
-  const n = qwertyMap[ev.code];
-  if (n != null) {
-    synth.noteOff(n + octaveOffset * 12);
+  const midi = activeKeys.get(ev.code);
+  if (midi != null) {
+    activeKeys.delete(ev.code);
+    setSvgKeyState(midi, false);
+    setKeyState(midi, false);
+    synth.noteOff(midi);
+  }
+});
+
+const releaseAllActiveKeys = () => {
+  for (const midi of activeKeys.values()) {
+    setSvgKeyState(midi, false);
+    setKeyState(midi, false);
+    synth.noteOff(midi);
+  }
+  activeKeys.clear();
+}
+
+window.addEventListener('blur', releaseAllActiveKeys);
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') {
+    releaseAllActiveKeys();
   }
 });
 
@@ -239,6 +268,37 @@ wetSlider.min = '0';
 wetSlider.max = '1';
 wetSlider.step = '0.01';
 wetSlider.value = '0.05';
+
+const octaveContainer = document.createElement('div');
+octaveContainer.id = 'octave-controls';
+
+const octaveDown = document.createElement('button');
+octaveDown.type = 'button';
+octaveDown.textContent = 'Octave -';
+octaveContainer.appendChild(octaveDown);
+
+const octaveUp = document.createElement('button');
+octaveUp.type = 'button';
+octaveUp.textContent = 'Octave +';
+octaveContainer.appendChild(octaveUp);
+
+const octaveLabel = document.createElement('span');
+octaveLabel.textContent = `Octave: ${octaveOffset}`;
+octaveContainer.appendChild(octaveLabel);
+
+effectsPanel.appendChild(octaveContainer);
+
+const clamp = (v: number) => Math.max(-2, Math.min(2, v));
+
+octaveDown.addEventListener('click', () => {
+  octaveOffset = clamp(octaveOffset - 1);
+  octaveLabel.textContent = `Octave: ${octaveOffset}`;
+});
+
+octaveUp.addEventListener('click', () => {
+  octaveOffset = clamp(octaveOffset + 1);
+  octaveLabel.textContent = `Octave: ${octaveOffset}`;
+});
 
 effectsPanel.appendChild(stopBtn);
 effectsPanel.appendChild(gainLabel);
