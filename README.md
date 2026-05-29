@@ -10,12 +10,12 @@ c4syn is a browser-based synthesizer built with TypeScript, Vite, and the Web Au
 - Delay uses a wet/dry mix so notes play immediately while echo layers on top.
 - The effects/control panel is wired for waveform, gain, filter cutoff, delay time, feedback, and wet mix, plus a “Stop” (panic) action.
 - Mobile layout is responsive (portrait stacked / landscape two-column), with viewport meta tuned for more stable rotation behavior.
+- On-screen `Octave +` / `Octave -` buttons in the effects panel to shift the entire mapping up or down by octaves.
 
 ### QWERTY Playback
 
-- The app supports playing the synth from your computer keyboard using a two-row mapping that mimics piano key positions. Mapping uses `KeyboardEvent.code` (physical key positions) so layout stays consistent across keyboard locales.
+- The app supports playing the synth from your computer keyboard using a two-row mapping that mimics piano key positions. 
 
-- Use the on-screen `Octave +` / `Octave -` buttons in the effects panel to shift the entire mapping up or down by octaves.
 
 - How to visualize the layout (white vs. black keys):
 
@@ -35,7 +35,7 @@ c4syn is a browser-based synthesizer built with TypeScript, Vite, and the Web Au
 				       (C4)(D4)(E4)(F4)(G4)(A4)(B4)(C5)(D5)(E5)(F5)(G5)
 		```
 
-- Play and hold keys for sustained notes; release to stop. Multiple simultaneous keys produce chords (polyphony supported by the synth engine).
+- Play and hold keys for sustained notes; release to stop. Multiple simultaneous keys produce chords.
 
 ## Goals
 
