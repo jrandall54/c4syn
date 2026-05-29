@@ -31,7 +31,7 @@ Goal: make the synth playable from keyboard and on-screen controls
 - 2.2 Implement on-screen keyboard component with visual feedback; add wet/dry delay mix (`wetGain`) so notes play immediately with delay on top (2–4h) — completed
 - 2.3 Implement on-screen piano keyboard graphic and wire one octave (C4–C5): map white keys, add black keys (C#4, D#4, F#4, G#4, A#4), ensure overlay and pointer-blocking; pointer-only input (1–2h)
 - 2.4 Add QWERTY key mapping and octave shift controls (1–2h) — completed
-- 2.5 Basic voice allocation (monophonic → 4-voice polyphony) (4–6h)
+-- 2.5 Basic voice allocation (configurable pooled voice manager — default: 8 voices) (4–6h)
 
 ### v3 — Enhanced Synthesis & Modulation
 Goal: richer sound design capabilities
@@ -61,7 +61,7 @@ Goal: complete feature set and UI polish
 ## Implementation Guidance
 
 - Input: map QWERTY keys and on-screen clicks to `noteOn/noteOff`; handle `keydown`/`keyup` with focus handling to avoid repeats.
-- Voice management: implement a `Voice` class that owns oscillator(s), filter, envelope, and returns to pool on release after ADSR completes.
+- Voice management: implement a `Voice` class that owns oscillator(s), filter, envelope, and returns to pool on release after ADSR completes. Use a configurable pool size (default: 8 voices) and a deterministic stealing policy (oldest-active-first).
 - Oscillators: create per-voice `OscillatorNode`s mixed into a per-voice `GainNode` before filter -> master gain.
 - Envelopes: control `GainNode.gain` with `setValueAtTime` and `linearRampToValueAtTime` for smooth transitions.
 - MIDI: use `navigator.requestMIDIAccess()` and map MIDI `noteOn`/`noteOff` messages to the synth API.
