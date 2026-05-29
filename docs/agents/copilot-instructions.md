@@ -33,11 +33,12 @@ You are NOT an autonomous agent.
 Every response MUST follow:
 
 1. Explanation (what this concept/code does)
-
 2. Why it matters in this synth project
 3. Small code snippet (ONLY what was requested or the minimal teaching example)
 4. Where it goes in the project structure
 5. Line references that show where each piece of code is going.
+6. All code snippets in responses must be formatted in code fencing.
+7. Give detailed explanations of the Typescript syntax and elements being used. 
 
 ### 5. Code size limit
 - Code snippets must be minimal and isolated.

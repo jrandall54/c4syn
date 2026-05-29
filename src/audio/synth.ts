@@ -9,7 +9,46 @@ export function initSynth() {
     let currentWaveform: OscillatorType = 'sine';
     let wetGain: GainNode | null = null;
 
+    const MAX_VOICES= 8;
 
+    type Voice = {
+        id: number;
+        note: number | null;
+        osc?: OscillatorNode;
+        gain?: GainNode;
+        lastAssignedAt?: number;
+    };
+
+    const voices: Voice[] = Array.from(
+        { length: MAX_VOICES }, 
+        (_, i) => ({ id: i, note: null })
+    );
+
+    const allocateVoice = (note: number): Voice => {
+        const idle = voices.find(v => v.note === null);
+        
+        if (idle) {
+            idle.note = note;
+            idle.lastAssignedAt = Date.now();
+            idle.osc = undefined;
+            idle.gain = undefined;
+            return idle;
+        }
+
+        let oldest = voices[0];
+        for (const v of voices) {
+            if ((v.lastAssignedAt ?? 0) < (oldest.lastAssignedAt ?? 0)) {
+                oldest = v;
+            }
+        }
+        oldest.note = note;
+        oldest.lastAssignedAt = Date.now();
+        oldest.osc = undefined;
+        oldest.gain = undefined;
+        return oldest;
+    };
+    
+    
 
     // Convert MIDI note number to frequency (A4 = 69 => 440 Hz)
     const midiNoteToFrequency = (note: number) => 440 * Math.pow(2, (note - 69) / 12);
